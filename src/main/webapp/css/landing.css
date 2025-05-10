@@ -1,0 +1,384 @@
+/*
+ * landing.css - Styles for the landing page
+ */
+
+/* Landing page specific styling */
+.landing-page {
+    background-color: #000;
+}
+
+.landing-page header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.landing-page .logo img {
+    height: 45px;
+}
+
+.landing-page .header-right {
+    display: flex;
+    align-items: center;
+}
+
+/* Hero section */
+.landing-page .hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.8) 100%), 
+                      url('/images/landing-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    border-bottom: 8px solid #222;
+}
+
+.hero-content {
+    text-align: center;
+    padding: 0 1.5rem;
+    max-width: 950px;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero-content h2 {
+    font-size: 1.75rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.cta-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.cta-form p {
+    margin-bottom: 1rem;
+}
+
+.cta-form form {
+    display: flex;
+    max-width: 700px;
+    width: 100%;
+}
+
+.cta-form input {
+    flex-grow: 1;
+    padding: 1.25rem 1rem;
+    border: none;
+    border-radius: 2px 0 0 2px;
+    font-size: 1rem;
+}
+
+.cta-form button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 0 2px 2px 0;
+    padding: 0 1.5rem;
+    font-size: 1.625rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cta-form button:hover {
+    background-color: var(--primary-hover);
+}
+
+/* Features section */
+.features {
+    padding: 4rem 0;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    padding: 2.5rem 3rem;
+    border-bottom: 8px solid #222;
+}
+
+.feature-text, .feature-img {
+    flex: 1;
+}
+
+.feature-text {
+    padding-right: 3rem;
+}
+
+.feature-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.feature-text p {
+    font-size: 1.5rem;
+}
+
+.feature-img {
+    display: flex;
+    justify-content: center;
+}
+
+.feature-img img {
+    max-width: 100%;
+    height: auto;
+}
+
+.feature:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.feature:nth-child(even) .feature-text {
+    padding-right: 0;
+    padding-left: 3rem;
+}
+
+/* FAQ section */
+.faq {
+    padding: 4rem 3rem;
+    text-align: center;
+    border-bottom: 8px solid #222;
+}
+
+.faq h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.accordion {
+    margin: 2rem auto;
+    max-width: 815px;
+}
+
+.accordion-item {
+    margin-bottom: 0.5rem;
+}
+
+.accordion-btn {
+    width: 100%;
+    text-align: left;
+    background-color: #303030;
+    color: #fff;
+    padding: 1.5rem;
+    font-size: 1.625rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+
+.accordion-btn::after {
+    content: "+";
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+}
+
+.accordion-btn.active {
+    background-color: #454545;
+}
+
+.accordion-btn.active::after {
+    content: "×";
+}
+
+.accordion-content {
+    background-color: #303030;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s;
+}
+
+.accordion-item.active .accordion-content {
+    max-height: 1200px;
+}
+
+.accordion-content p {
+    padding: 1.5rem;
+    font-size: 1.25rem;
+    text-align: left;
+}
+
+/* Footer section */
+.landing-page .footer-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 0;
+}
+
+.landing-page .footer-content > p {
+    color: #757575;
+    margin-bottom: 2rem;
+}
+
+.landing-page .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.landing-page .footer-col {
+    flex: 0 0 25%;
+    margin-bottom: 1rem;
+}
+
+.landing-page .footer-col a {
+    color: #757575;
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+}
+
+.landing-page .footer-col a:hover {
+    text-decoration: underline;
+}
+
+.landing-page .copyright {
+    color: #757575;
+    font-size: 0.875rem;
+    margin-top: 1.5rem;
+}
+
+/* Responsive styles */
+@media (max-width: 950px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .hero-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .feature {
+        flex-direction: column;
+        padding: 2rem;
+    }
+    
+    .feature-text, .feature-img {
+        text-align: center;
+        padding: 1rem 0;
+    }
+    
+    .feature:nth-child(even) {
+        flex-direction: column;
+    }
+    
+    .feature:nth-child(even) .feature-text {
+        padding-left: 0;
+    }
+    
+    .feature-text h2 {
+        font-size: 2rem;
+    }
+    
+    .feature-text p {
+        font-size: 1.125rem;
+    }
+    
+    .accordion-btn {
+        font-size: 1.25rem;
+        padding: 1.25rem;
+    }
+    
+    .accordion-content p {
+        font-size: 1.125rem;
+        padding: 1.25rem;
+    }
+    
+    .landing-page .footer-col {
+        flex: 0 0 50%;
+    }
+}
+
+@media (max-width: 550px) {
+    .landing-page header {
+        padding: 1rem;
+    }
+    
+    .landing-page .logo img {
+        height: 24px;
+    }
+    
+    .hero-content h1 {
+        font-size: 1.75rem;
+    }
+    
+    .hero-content h2 {
+        font-size: 1.125rem;
+    }
+    
+    .hero-content p {
+        font-size: 1rem;
+    }
+    
+    .cta-form form {
+        flex-direction: column;
+    }
+    
+    .cta-form input {
+        width: 100%;
+        margin-bottom: 1rem;
+        border-radius: 2px;
+    }
+    
+    .cta-form button {
+        width: 100%;
+        border-radius: 2px;
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+    
+    .feature-text h2 {
+        font-size: 1.5rem;
+    }
+    
+    .feature-text p {
+        font-size: 1rem;
+    }
+    
+    .faq {
+        padding: 2rem 1rem;
+    }
+    
+    .faq h2 {
+        font-size: 1.5rem;
+    }
+    
+    .accordion-btn {
+        font-size: 1.125rem;
+        padding: 1rem;
+        text-align: left;
+    }
+    
+    .accordion-btn::after {
+        font-size: 1.5rem;
+    }
+    
+    .accordion-content p {
+        font-size: 1rem;
+        padding: 1rem;
+    }
+    
+    .landing-page .footer-col {
+        flex: 0 0 100%;
+    }
+}

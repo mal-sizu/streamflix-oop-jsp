@@ -1,0 +1,194 @@
+/*
+ * auth.css - Styles for authentication pages (login, register, etc.)
+ */
+
+/* Auth pages specific styling */
+.auth-page {
+    background-color: #000;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                     url('/images/auth-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+.auth-page header {
+    padding: 1.5rem 3rem;
+}
+
+.auth-page .logo img {
+    height: 45px;
+}
+
+/* Auth container */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 170px); /* Account for header and footer */
+    padding: 2rem 1rem;
+}
+
+.auth-form-container {
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 4px;
+    padding: 3rem;
+    width: 100%;
+    max-width: 450px;
+}
+
+.auth-form-container h1 {
+    color: #fff;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Auth form */
+.auth-form {
+    margin-bottom: 2rem;
+}
+
+.auth-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 1rem;
+    background-color: #333;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.auth-form input:focus {
+    outline: none;
+    background-color: #454545;
+}
+
+.auth-form .form-checkbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #b3b3b3;
+    font-size: 0.875rem;
+}
+
+.auth-form .form-checkbox label {
+    display: flex;
+    align-items: center;
+}
+
+.auth-form .form-checkbox input {
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+.forgot-link {
+    color: #b3b3b3;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+
+/* Auth footer */
+.auth-footer {
+    color: #b3b3b3;
+}
+
+.auth-footer p {
+    margin-bottom: 1rem;
+}
+
+.auth-footer a {
+    color: #fff;
+}
+
+.auth-footer .small {
+    font-size: 0.8125rem;
+}
+
+/* Footer */
+.auth-page .footer-content {
+    background-color: rgba(0, 0, 0, 0.75);
+    padding: 2rem 3rem;
+}
+
+.auth-page .footer-links {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.auth-page .footer-col a {
+    color: #757575;
+    font-size: 0.8125rem;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.auth-page .copyright {
+    color: #757575;
+    font-size: 0.8125rem;
+}
+
+/* Alerts */
+.alert {
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    background-color: rgba(70, 211, 105, 0.2);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.alert-error {
+    background-color: rgba(232, 124, 3, 0.2);
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+}
+
+/* Responsive styles */
+@media (max-width: 550px) {
+    .auth-page header {
+        padding: 1rem;
+    }
+    
+    .auth-page .logo img {
+        height: 24px;
+    }
+    
+    .auth-form-container {
+        padding: 1.5rem;
+    }
+    
+    .auth-form-container h1 {
+        font-size: 1.5rem;
+    }
+    
+    .auth-form input {
+        padding: 0.75rem;
+    }
+    
+    .auth-page .footer-content {
+        padding: 1.5rem 1rem;
+    }
+    
+    .auth-page .footer-col {
+        flex: 0 0 50%;
+        margin-bottom: 1rem;
+    }
+}
