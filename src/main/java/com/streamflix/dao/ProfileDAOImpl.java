@@ -1,7 +1,7 @@
 package com.streamflix.dao;
 
 import com.streamflix.model.Profile;
-import com.streamflix.util.DatabaseUtil;
+import com.streamflix.utils.DatabaseUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

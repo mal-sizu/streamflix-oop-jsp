@@ -2,7 +2,7 @@ package com.streamflix.dao;
 
 import com.streamflix.model.Content;
 import com.streamflix.model.Episode;
-import com.streamflix.util.DatabaseUtil;
+import com.streamflix.utils.DatabaseUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -542,3 +542,4 @@ public class ContentDAOImpl implements ContentDAO {
             e.printStackTrace();
         }
     }
+}

@@ -1,4 +1,4 @@
-package com.streamflix.util;
+package com.streamflix.utils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,18 +14,35 @@ import org.apache.commons.dbcp2.BasicDataSource;
 public class DatabaseUtil {
     private static DataSource dataSource;
     
+    // MySQL Database Configuration
+    private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/streamflix";
+    private static final String DB_USERNAME = "cinephile";
+    private static final String DB_PASSWORD = "streamflix2025!";
+    
+    // Connection Pool Configuration
+    private static final int INITIAL_SIZE = 5;
+    private static final int MAX_TOTAL = 20;
+    private static final int MAX_IDLE = 10;
+    private static final int MIN_IDLE = 5;
+    private static final long MAX_WAIT_MILLIS = 10000;
+    
     static {
         try {
-            // Try to get DataSource from JNDI first
+            // Try to get DataSource from JNDI first (for production)
             try {
                 Context initContext = new InitialContext();
                 Context envContext = (Context) initContext.lookup("java:comp/env");
                 dataSource = (DataSource) envContext.lookup("jdbc/streamflix");
+                System.out.println("Using JNDI DataSource");
             } catch (NamingException e) {
-                // If JNDI lookup fails, create a connection pool manually
+                // If JNDI lookup fails, create a connection pool manually (for development)
+                System.out.println("JNDI lookup failed. Setting up BasicDataSource: " + e.getMessage());
                 setupDataSource();
             }
         } catch (Exception e) {
+            System.err.println("Error initializing database connection: " + e.getMessage());
+            e.printStackTrace();
             throw new ExceptionInInitializerError(e);
         }
     }
@@ -35,19 +52,25 @@ public class DatabaseUtil {
      */
     private static void setupDataSource() {
         BasicDataSource ds = new BasicDataSource();
-        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/streamflix?useSSL=false&serverTimezone=UTC");
-        ds.setUsername("root"); // Change according to your MySQL setup
-        ds.setPassword("password"); // Change according to your MySQL setup
+        ds.setDriverClassName(DB_DRIVER);
+        ds.setUrl(DB_URL);
+        ds.setUsername(DB_USERNAME);
+        ds.setPassword(DB_PASSWORD);
         
         // Connection pool settings
-        ds.setInitialSize(5);
-        ds.setMaxTotal(20);
-        ds.setMaxIdle(10);
-        ds.setMinIdle(5);
-        ds.setMaxWaitMillis(10000);
+        ds.setInitialSize(INITIAL_SIZE);
+        ds.setMaxTotal(MAX_TOTAL);
+        ds.setMaxIdle(MAX_IDLE);
+        ds.setMinIdle(MIN_IDLE);
+        ds.setMaxWaitMillis(MAX_WAIT_MILLIS);
+        
+        // Validation settings
+        ds.setValidationQuery("SELECT 1");
+        ds.setTestOnBorrow(true);
+        ds.setTestWhileIdle(true);
         
         dataSource = ds;
+        System.out.println("BasicDataSource set up successfully");
     }
     
     /**
@@ -57,6 +80,9 @@ public class DatabaseUtil {
      * @throws SQLException if a connection cannot be obtained
      */
     public static Connection getConnection() throws SQLException {
+        if (dataSource == null) {
+            throw new SQLException("DataSource is not initialized");
+        }
         return dataSource.getConnection();
     }
     
@@ -70,7 +96,6 @@ public class DatabaseUtil {
             try {
                 conn.close();
             } catch (SQLException e) {
-                // Log exception
                 System.err.println("Error closing database connection: " + e.getMessage());
             }
         }
