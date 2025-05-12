@@ -1,0 +1,704 @@
+/*
+ * admin.css - Styles for admin panel
+ */
+
+/* Admin layout */
+.admin-page {
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    color: #333;
+}
+
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 250px;
+    background-color: #212529;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.admin-content {
+    flex: 1;
+    margin-left: 250px;
+    padding: 20px;
+}
+
+/* Sidebar */
+.sidebar-header {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header img {
+    height: 40px;
+    margin-bottom: 1rem;
+}
+
+.sidebar-header h3 {
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.sidebar-nav {
+    padding: 1rem 0;
+}
+
+.sidebar-nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-nav li.separator {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 1rem 0;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s;
+}
+
+.sidebar-nav a:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+}
+
+.sidebar-nav li.active a {
+    color: #fff;
+    background-color: var(--primary-color);
+}
+
+.sidebar-nav i {
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Admin header */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.admin-header-title h1 {
+    font-size: 1.75rem;
+    color: #333;
+    margin: 0 0 0.25rem;
+}
+
+.admin-header-title p {
+    margin: 0;
+    color: #666;
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.admin-profile span {
+    margin-right: 0.75rem;
+    font-weight: 500;
+}
+
+.admin-profile img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+/* Stats cards */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.bg-blue {
+    background-color: #4e73df;
+}
+
+.bg-red {
+    background-color: #e74a3b;
+}
+
+.bg-green {
+    background-color: #1cc88a;
+}
+
+.bg-orange {
+    background-color: #f6c23e;
+}
+
+.stat-info h3 {
+    font-size: 0.875rem;
+    color: #666;
+    margin: 0 0 0.25rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+/* Admin cards */
+.admin-card {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e3e6f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-header h2 {
+    font-size: 1.25rem;
+    margin: 0;
+    color: #333;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Tables */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e3e6f0;
+}
+
+.admin-table th {
+    font-weight: 600;
+    color: #555;
+    background-color: #f8f9fc;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f8f9fc;
+}
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fc;
+    color: #4e73df;
+    transition: all 0.2s;
+}
+
+.btn-icon:hover {
+    background-color: #4e73df;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-icon.danger {
+    color: #e74a3b;
+}
+
+.btn-icon.danger:hover {
+    background-color: #e74a3b;
+    color: #fff;
+}
+
+/* Star rating in admin */
+.star-rating.small {
+    font-size: 0.75rem;
+    color: #f6c23e;
+}
+
+.star-rating.small span {
+    font-size: 0.75rem;
+    color: #666;
+    margin-left: 0.25rem;
+}
+
+/* Quick actions */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.quick-action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #f8f9fc;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+}
+
+.quick-action-item:hover {
+    background-color: #4e73df;
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-5px);
+}
+
+.quick-action-item i {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Forms */
+.admin-form {
+    margin-bottom: 1.5rem;
+}
+
+.admin-form .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="email"],
+.admin-form input[type="password"],
+.admin-form input[type="number"],
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d3e2;
+    border-radius: 0.25rem;
+    color: #333;
+    transition: border-color 0.2s;
+}
+
+.admin-form input:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+    border-color: #4e73df;
+    outline: none;
+}
+
+.admin-form input[type="checkbox"],
+.admin-form input[type="radio"] {
+    margin-right: 0.5rem;
+}
+
+.admin-form .radio-group,
+.admin-form .checkbox-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.admin-form .radio-group label,
+.admin-form .checkbox-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.admin-form textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.admin-form .form-hint {
+    font-size: 0.8125rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.admin-form .form-error {
+    font-size: 0.8125rem;
+    color: #e74a3b;
+    margin-top: 0.25rem;
+}
+
+.admin-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* User management */
+.user-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.user-card {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+}
+
+.user-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.user-email {
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.user-role {
+    margin-bottom: 1rem;
+}
+
+.user-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Content management */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.content-item {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.content-thumbnail {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    overflow: hidden;
+}
+
+.content-thumbnail img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content-info {
+    padding: 1rem;
+}
+
+.content-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.content-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.content-meta span {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.content-meta .badge {
+    color: #fff;
+}
+
+.content-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Form wizard */
+.form-wizard {
+    display: flex;
+    margin-bottom: 2rem;
+}
+
+.wizard-step {
+    flex: 1;
+    position: relative;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.wizard-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 1rem;
+    right: 0;
+    transform: translateX(50%);
+    width: 100%;
+    height: 2px;
+    background-color: #e3e6f0;
+    z-index: 1;
+}
+
+.wizard-step.active::after,
+.wizard-step.completed::after {
+    background-color: #4e73df;
+}
+
+.step-number {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+    background-color: #e3e6f0;
+    color: #666;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin: 0 auto 0.5rem;
+    z-index: 2;
+}
+
+.wizard-step.active .step-number {
+    background-color: #4e73df;
+    color: #fff;
+}
+
+.wizard-step.completed .step-number {
+    background-color: #1cc88a;
+    color: #fff;
+}
+
+.step-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.step-description {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+/* Episode management */
+.episode-list {
+    margin-bottom: 1.5rem;
+}
+
+.episode-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #e3e6f0;
+    border-radius: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.episode-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #4e73df;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 1rem;
+}
+
+.episode-info {
+    flex: 1;
+}
+
+.episode-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem;
+}
+
+.episode-details {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.episode-duration {
+    margin-right: 1rem;
+}
+
+.episode-season {
+    background-color: #f8f9fc;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    color: #4e73df;
+}
+
+.episode-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Statistics & charts */
+.chart-container {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chart-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.chart-options {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.chart-options select {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #d1d3e2;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Admin responsive */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 0;
+        transition: width 0.3s;
+    }
+    
+    .admin-sidebar.show {
+        width: 250px;
+    }
+    
+    .admin-content {
+        margin-left: 0;
+    }
+    
+    .admin-header {
+        position: sticky;
+        top: 0;
+        background-color: #f5f5f5;
+        z-index: 99;
+        padding: 1rem 0;
+    }
+    
+    .toggle-sidebar {
+        display: block;
+    }
+}
