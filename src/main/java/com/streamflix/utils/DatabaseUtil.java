@@ -14,11 +14,11 @@ import org.apache.commons.dbcp2.BasicDataSource;
 public class DatabaseUtil {
     private static DataSource dataSource;
     
-    // MySQL Database Configuration
-    private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/streamflix";
-    private static final String DB_USERNAME = "cinephile";
-    private static final String DB_PASSWORD = "streamflix2025!";
+    // SQL Server Database Configuration
+    private static final String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=StreamFlixDB;encrypt=true;trustServerCertificate=true";
+    private static final String DB_USERNAME = "sa";
+    private static final String DB_PASSWORD = "YourStrongPassword";
     
     // Connection Pool Configuration
     private static final int INITIAL_SIZE = 5;

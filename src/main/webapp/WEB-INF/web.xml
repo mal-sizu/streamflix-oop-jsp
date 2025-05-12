@@ -28,10 +28,21 @@
     
     <!-- Database Connection Resource -->
     <resource-ref>
-        <res-ref-name>jdbc/streamflix</res-ref-name>
+        <description>SQL Server DataSource</description>
+        <res-ref-name>jdbc/StreamFlixDB</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>
+    
+    <!-- Connection Test Servlet -->
+    <servlet>
+        <servlet-name>ConnectionTestServlet</servlet-name>
+        <servlet-class>com.streamflix.controller.ConnectionTestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ConnectionTestServlet</servlet-name>
+        <url-pattern>/connection-test</url-pattern>
+    </servlet-mapping>
     
     <!-- Authentication Servlet -->
     <servlet>
