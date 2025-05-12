@@ -3,6 +3,7 @@ package com.streamflix.dao;
 import com.streamflix.model.Payment;
 import java.util.Date;
 import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * Data Access Object interface for Payment entity
@@ -15,7 +16,7 @@ public interface PaymentDAO {
      * @param paymentId the ID of the payment to find
      * @return the payment if found, null otherwise
      */
-    Payment findById(long paymentId);
+    Payment findById(int paymentId);
     
     /**
      * Find all payments for a specific user
@@ -23,7 +24,7 @@ public interface PaymentDAO {
      * @param userId the ID of the user
      * @return list of payments for the user
      */
-    List<Payment> findByUserId(long userId);
+    List<Payment> findByUserId(int userId);
     
     /**
      * Find payments by subscription ID
@@ -31,7 +32,7 @@ public interface PaymentDAO {
      * @param subscriptionId the ID of the subscription
      * @return list of payments for the subscription
      */
-    List<Payment> findBySubscriptionId(long subscriptionId);
+    List<Payment> findBySubscriptionId(int subscriptionId);
     
     /**
      * Find payments by date range
@@ -43,12 +44,12 @@ public interface PaymentDAO {
     List<Payment> findByDateRange(Date startDate, Date endDate);
     
     /**
-     * Find payments by status
+     * Find payments by method
      * 
-     * @param status the payment status
-     * @return list of payments with the specified status
+     * @param method the payment method
+     * @return list of payments with the specified method
      */
-    List<Payment> findByStatus(String status);
+    List<Payment> findByMethod(String method);
     
     /**
      * Save a new payment
@@ -72,7 +73,7 @@ public interface PaymentDAO {
      * @param paymentId the ID of the payment to delete
      * @return true if deleted successfully, false otherwise
      */
-    boolean delete(long paymentId);
+    boolean delete(int paymentId);
     
     /**
      * Get total revenue for a specific period
@@ -81,13 +82,13 @@ public interface PaymentDAO {
      * @param endDate the end date
      * @return the total revenue amount
      */
-    double getTotalRevenue(Date startDate, Date endDate);
+    BigDecimal getTotalRevenue(Date startDate, Date endDate);
     
     /**
      * Get count of payments by payment method
      * 
-     * @param paymentMethod the payment method
+     * @param method the payment method
      * @return the count of payments
      */
-    int getCountByPaymentMethod(String paymentMethod);
+    int getCountByPaymentMethod(String method);
 }

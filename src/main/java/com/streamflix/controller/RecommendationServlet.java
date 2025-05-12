@@ -21,6 +21,7 @@ import java.util.List;
 public class RecommendationServlet extends HttpServlet {
 
     private RecommendationDAO recommendationDAO;
+    private static final int DEFAULT_LIMIT = 10;
     
     @Override
     public void init() throws ServletException {
@@ -62,11 +63,19 @@ public class RecommendationServlet extends HttpServlet {
         
         if (session != null && session.getAttribute("currentProfile") != null) {
             Profile profile = (Profile) session.getAttribute("currentProfile");
+            User user = (User) session.getAttribute("currentUser");
+            
+            if (user == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+            
+            int userId = user.getUserId();
             
             // Get different types of recommendations
-            List<Content> personalizedRecommendations = recommendationDAO.getPersonalizedRecommendations(profile.getProfileId());
-            List<Content> trendingContent = recommendationDAO.getTrendingContent();
-            List<Content> newReleases = recommendationDAO.getNewReleases();
+            List<Content> personalizedRecommendations = recommendationDAO.getPersonalizedRecommendations(userId, DEFAULT_LIMIT);
+            List<Content> trendingContent = recommendationDAO.getTrendingContent(DEFAULT_LIMIT);
+            List<Content> newReleases = recommendationDAO.getNewReleases(DEFAULT_LIMIT);
             
             // Set attributes for the JSP
             request.setAttribute("personalizedRecommendations", personalizedRecommendations);
@@ -84,7 +93,7 @@ public class RecommendationServlet extends HttpServlet {
      */
     private void getSimilarContent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int contentId = Integer.parseInt(request.getParameter("id"));
-        List<Content> similarContent = recommendationDAO.getSimilarContent(contentId);
+        List<Content> similarContent = recommendationDAO.getSimilarContent(contentId, DEFAULT_LIMIT);
         
         // Check if this is an AJAX request
         String xRequestedWith = request.getHeader("X-Requested-With");
@@ -107,7 +116,7 @@ public class RecommendationServlet extends HttpServlet {
                 jsonBuilder.append("\"thumbnailUrl\":\"").append(content.getThumbnailUrl()).append("\",\n");
                 jsonBuilder.append("\"type\":\"").append(content.getType()).append("\",\n");
                 jsonBuilder.append("\"genre\":\"").append(content.getGenre()).append("\",\n");
-                jsonBuilder.append("\"rating\":").append(content.getRating());
+                jsonBuilder.append("\"rating\":").append(content.getAverageRating());
                 jsonBuilder.append("\n}");
                 
                 if (i < similarContent.size() - 1) {
@@ -131,7 +140,7 @@ public class RecommendationServlet extends HttpServlet {
      * Get trending content
      */
     private void getTrendingContent(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Content> trendingContent = recommendationDAO.getTrendingContent();
+        List<Content> trendingContent = recommendationDAO.getTrendingContent(DEFAULT_LIMIT);
         
         // Check if this is an AJAX request
         String xRequestedWith = request.getHeader("X-Requested-With");
@@ -154,7 +163,7 @@ public class RecommendationServlet extends HttpServlet {
                 jsonBuilder.append("\"thumbnailUrl\":\"").append(content.getThumbnailUrl()).append("\",\n");
                 jsonBuilder.append("\"type\":\"").append(content.getType()).append("\",\n");
                 jsonBuilder.append("\"genre\":\"").append(content.getGenre()).append("\",\n");
-                jsonBuilder.append("\"rating\":").append(content.getRating());
+                jsonBuilder.append("\"rating\":").append(content.getAverageRating());
                 jsonBuilder.append("\n}");
                 
                 if (i < trendingContent.size() - 1) {
@@ -181,7 +190,18 @@ public class RecommendationServlet extends HttpServlet {
         
         if (session != null && session.getAttribute("currentProfile") != null) {
             Profile profile = (Profile) session.getAttribute("currentProfile");
-            List<Content> personalizedRecommendations = recommendationDAO.getPersonalizedRecommendations(profile.getProfileId());
+            User user = (User) session.getAttribute("currentUser");
+            
+            if (user == null) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                PrintWriter out = response.getWriter();
+                out.print("{\"error\":\"User not logged in\"}");
+                out.flush();
+                return;
+            }
+            
+            int userId = user.getUserId();
+            List<Content> personalizedRecommendations = recommendationDAO.getPersonalizedRecommendations(userId, DEFAULT_LIMIT);
             
             // Check if this is an AJAX request
             String xRequestedWith = request.getHeader("X-Requested-With");
@@ -204,7 +224,7 @@ public class RecommendationServlet extends HttpServlet {
                     jsonBuilder.append("\"thumbnailUrl\":\"").append(content.getThumbnailUrl()).append("\",\n");
                     jsonBuilder.append("\"type\":\"").append(content.getType()).append("\",\n");
                     jsonBuilder.append("\"genre\":\"").append(content.getGenre()).append("\",\n");
-                    jsonBuilder.append("\"rating\":").append(content.getRating());
+                    jsonBuilder.append("\"rating\":").append(content.getAverageRating());
                     jsonBuilder.append("\n}");
                     
                     if (i < personalizedRecommendations.size() - 1) {

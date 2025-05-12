@@ -2,17 +2,18 @@
 -- SQL Server version
 
 -- Create the database if it doesn't exist
-IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = 'StreamFlixDB')
+IF NOT EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = 'streamflix')
 BEGIN
-    CREATE DATABASE StreamFlixDB;
-    PRINT 'Database StreamFlixDB created successfully.';
+    CREATE DATABASE streamflix;
+    PRINT 'Database streamflix created successfully.';
 END
 ELSE
-    PRINT 'Database StreamFlixDB already exists.';
+    PRINT 'Database streamflix already exists.';
 GO
 
-USE StreamFlixDB;
+USE streamflix;
 GO
+
 
 -- Create Users table
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users')

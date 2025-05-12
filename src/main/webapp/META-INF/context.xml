@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-    <!-- SQL Server Connection Pool Configuration -->
+    <!-- MySQL Connection Pool Configuration -->
     <Resource
         name="jdbc/StreamFlixDB"
         auth="Container"
         type="javax.sql.DataSource"
-        driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-        url="jdbc:sqlserver://localhost:1433;databaseName=StreamFlixDB;encrypt=true;trustServerCertificate=true"
-        username="sa"
-        password="YourStrongPassword"
+        driverClassName="com.mysql.cj.jdbc.Driver"
+        url="jdbc:mysql://localhost:3306/streamflix"
+        username="cinephile"
+        password="streamflix2025!"
         maxTotal="100"
         maxIdle="30"
         maxWaitMillis="10000"

@@ -1,9 +1,10 @@
 package com.streamflix.dao;
 
 import com.streamflix.model.Payment;
-import com.streamflix.util.DatabaseUtil;
+import com.streamflix.utils.DatabaseUtil;
 
 import java.sql.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,13 +22,13 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
     
     @Override
-    public Payment findById(long paymentId) {
+    public Payment findById(int paymentId) {
         String sql = "SELECT * FROM payments WHERE payment_id = ?";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setLong(1, paymentId);
+            stmt.setInt(1, paymentId);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -42,7 +43,7 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
     
     @Override
-    public List<Payment> findByUserId(long userId) {
+    public List<Payment> findByUserId(int userId) {
         List<Payment> payments = new ArrayList<>();
         String sql = "SELECT p.* FROM payments p JOIN subscriptions s ON p.subscription_id = s.subscription_id "
                 + "WHERE s.user_id = ? ORDER BY p.payment_date DESC";
@@ -50,7 +51,7 @@ public class PaymentDAOImpl implements PaymentDAO {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setLong(1, userId);
+            stmt.setInt(1, userId);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -65,14 +66,14 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
     
     @Override
-    public List<Payment> findBySubscriptionId(long subscriptionId) {
+    public List<Payment> findBySubscriptionId(int subscriptionId) {
         List<Payment> payments = new ArrayList<>();
         String sql = "SELECT * FROM payments WHERE subscription_id = ? ORDER BY payment_date DESC";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setLong(1, subscriptionId);
+            stmt.setInt(1, subscriptionId);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -110,14 +111,14 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
     
     @Override
-    public List<Payment> findByStatus(String status) {
+    public List<Payment> findByMethod(String method) {
         List<Payment> payments = new ArrayList<>();
-        String sql = "SELECT * FROM payments WHERE status = ? ORDER BY payment_date DESC";
+        String sql = "SELECT * FROM payments WHERE payment_method = ? ORDER BY payment_date DESC";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setString(1, status);
+            stmt.setString(1, method);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -133,8 +134,7 @@ public class PaymentDAOImpl implements PaymentDAO {
     
     @Override
     public Payment save(Payment payment) {
-        String sql = "INSERT INTO payments (subscription_id, amount, payment_date, payment_method, "
-                + "transaction_id, status, billing_address, card_last_four) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO payments (subscription_id, amount, payment_date, payment_method, transaction_id, status, billing_address, card_last_four) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -160,9 +160,7 @@ public class PaymentDAOImpl implements PaymentDAO {
     
     @Override
     public boolean update(Payment payment) {
-        String sql = "UPDATE payments SET subscription_id = ?, amount = ?, payment_date = ?, "
-                + "payment_method = ?, transaction_id = ?, status = ?, billing_address = ?, "
-                + "card_last_four = ? WHERE payment_id = ?";
+        String sql = "UPDATE payments SET subscription_id = ?, amount = ?, payment_date = ?, payment_method = ?, transaction_id = ?, status = ?, billing_address = ?, card_last_four = ? WHERE payment_id = ?";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -179,13 +177,13 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
     
     @Override
-    public boolean delete(long paymentId) {
+    public boolean delete(int paymentId) {
         String sql = "DELETE FROM payments WHERE payment_id = ?";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setLong(1, paymentId);
+            stmt.setInt(1, paymentId);
             
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -196,8 +194,8 @@ public class PaymentDAOImpl implements PaymentDAO {
     }
     
     @Override
-    public double getTotalRevenue(Date startDate, Date endDate) {
-        String sql = "SELECT SUM(amount) FROM payments WHERE payment_date BETWEEN ? AND ? AND status = 'COMPLETED'";
+    public BigDecimal getTotalRevenue(Date startDate, Date endDate) {
+        String sql = "SELECT SUM(amount) FROM payments WHERE payment_date BETWEEN ? AND ?";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -207,24 +205,25 @@ public class PaymentDAOImpl implements PaymentDAO {
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getDouble(1);
+                    double amount = rs.getDouble(1);
+                    return BigDecimal.valueOf(amount);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         
-        return 0.0;
+        return BigDecimal.ZERO;
     }
     
     @Override
-    public int getCountByPaymentMethod(String paymentMethod) {
+    public int getCountByPaymentMethod(String method) {
         String sql = "SELECT COUNT(*) FROM payments WHERE payment_method = ?";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            stmt.setString(1, paymentMethod);
+            stmt.setString(1, method);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

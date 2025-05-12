@@ -3,122 +3,127 @@ package com.streamflix.utils;
 import java.util.regex.Pattern;
 
 /**
- * Utility class for input validation
+ * Comprehensive validation utility class.
+ * Handles data validation, sanitization, and security checks.
  */
 public class ValidationUtil {
-    
-    // Regular expressions for validation
+    // Regex patterns as constants for maintainability
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+    private static final String PHONE_REGEX = "^\\+?[0-9. ()-]{10,15}$";
     private static final String NAME_REGEX = "^[\\p{L} .'-]+$";
     private static final String USERNAME_REGEX = "^[a-zA-Z0-9_-]{3,16}$";
     
     // Compiled patterns for better performance
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(PASSWORD_REGEX);
+    private static final Pattern PHONE_PATTERN = Pattern.compile(PHONE_REGEX);
     private static final Pattern NAME_PATTERN = Pattern.compile(NAME_REGEX);
     private static final Pattern USERNAME_PATTERN = Pattern.compile(USERNAME_REGEX);
-    
+
     /**
-     * Validates an email address
-     * 
-     * @param email Email to validate
+     * Validates email format
+     * @param email Email address to validate
      * @return true if valid, false otherwise
      */
     public static boolean isValidEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            return false;
-        }
-        return EMAIL_PATTERN.matcher(email).matches();
+        return isNotEmpty(email) && EMAIL_PATTERN.matcher(email).matches();
     }
-    
+
     /**
-     * Validates a password (min 8 chars, at least 1 digit, 1 lowercase, 1 uppercase)
-     * 
+     * Validates password complexity:
+     * - Minimum 8 characters
+     * - At least 1 digit
+     * - At least 1 lowercase letter
+     * - At least 1 uppercase letter
      * @param password Password to validate
      * @return true if valid, false otherwise
      */
     public static boolean isValidPassword(String password) {
-        if (password == null || password.trim().isEmpty()) {
-            return false;
-        }
-        return PASSWORD_PATTERN.matcher(password).matches();
+        return isNotEmpty(password) && PASSWORD_PATTERN.matcher(password).matches();
     }
-    
+
     /**
-     * Validates a name (letters, spaces, dashes, apostrophes)
-     * 
+     * Validates international phone number format
+     * @param phoneNumber Phone number to validate
+     * @return true if valid, false otherwise
+     */
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        return isNotEmpty(phoneNumber) && PHONE_PATTERN.matcher(phoneNumber).matches();
+    }
+
+    /**
+     * Validates human names (supports international characters)
      * @param name Name to validate
      * @return true if valid, false otherwise
      */
     public static boolean isValidName(String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return false;
-        }
-        return NAME_PATTERN.matcher(name).matches();
+        return isNotEmpty(name) && NAME_PATTERN.matcher(name).matches();
     }
-    
+
     /**
-     * Validates a username (3-16 characters, alphanumeric, underscore, dash)
-     * 
+     * Validates username format:
+     * - 3-16 characters
+     * - Alphanumeric, underscores, and dashes
      * @param username Username to validate
      * @return true if valid, false otherwise
      */
     public static boolean isValidUsername(String username) {
-        if (username == null || username.trim().isEmpty()) {
-            return false;
-        }
-        return USERNAME_PATTERN.matcher(username).matches();
+        return isNotEmpty(username) && USERNAME_PATTERN.matcher(username).matches();
     }
-    
+
     /**
-     * Validates that a string is not null or empty
-     * 
-     * @param str String to validate
-     * @return true if not null or empty, false otherwise
+     * Checks if a string contains non-whitespace content
+     * @param str String to check
+     * @return true if not null and contains non-whitespace characters
      */
     public static boolean isNotEmpty(String str) {
         return str != null && !str.trim().isEmpty();
     }
-    
+
     /**
-     * Validates that a number is within a range
-     * 
-     * @param value Value to validate
-     * @param min Minimum value (inclusive)
-     * @param max Maximum value (inclusive)
+     * Validates numeric range (inclusive)
+     * @param value Number to check
+     * @param min Minimum allowed value
+     * @param max Maximum allowed value
      * @return true if within range, false otherwise
      */
     public static boolean isInRange(int value, int min, int max) {
         return value >= min && value <= max;
     }
-    
+
     /**
-     * Validates that a string is within a length range
-     * 
+     * Validates string length range (inclusive)
      * @param str String to validate
-     * @param minLength Minimum length (inclusive)
-     * @param maxLength Maximum length (inclusive)
+     * @param minLength Minimum allowed length
+     * @param maxLength Maximum allowed length
      * @return true if within range, false otherwise
      */
     public static boolean isValidLength(String str, int minLength, int maxLength) {
-        if (str == null) {
-            return false;
-        }
-        int length = str.trim().length();
-        return length >= minLength && length <= maxLength;
+        return str != null && str.length() >= minLength && str.length() <= maxLength;
     }
-    
+
     /**
-     * Sanitizes a string to prevent XSS attacks
-     * 
-     * @param input Input string to sanitize
-     * @return Sanitized string
+     * Sanitizes input to prevent XSS attacks
+     * @param input User input to sanitize
+     * @return Sanitized string with HTML entities encoded
+     */
+    public static String sanitizeInput(String input) {
+        if (input == null) return null;
+        
+        return input.replaceAll("<", "&lt;")
+                   .replaceAll(">", "&gt;")
+                   .replaceAll("\"", "&quot;")
+                   .replaceAll("'", "&#x27;")
+                   .replaceAll("/", "&#x2F;");
+    }
+
+    /**
+     * Alias for sanitizeInput() with HTML-specific name
+     * @param input User input to sanitize
+     * @return Sanitized string with HTML entities encoded
      */
     public static String sanitizeHtml(String input) {
-        if (input == null) {
-            return null;
-        }
-        return input.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        return sanitizeInput(input);
     }
 }

@@ -1,7 +1,7 @@
 package com.streamflix.dao;
 
 import com.streamflix.model.Episode;
-import com.streamflix.util.DatabaseUtil;
+import com.streamflix.utils.DatabaseUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class EpisodeDAOImpl implements EpisodeDAO {
     @Override
     public List<Episode> findByContentId(long contentId) {
         List<Episode> episodes = new ArrayList<>();
-        String sql = "SELECT * FROM episodes WHERE content_id = ? ORDER BY season_number, episode_number";
+        String sql = "SELECT * FROM episodes WHERE series_id = ? ORDER BY season, episode_number";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -65,7 +65,7 @@ public class EpisodeDAOImpl implements EpisodeDAO {
     @Override
     public List<Episode> findByContentIdAndSeason(long contentId, int seasonNumber) {
         List<Episode> episodes = new ArrayList<>();
-        String sql = "SELECT * FROM episodes WHERE content_id = ? AND season_number = ? ORDER BY episode_number";
+        String sql = "SELECT * FROM episodes WHERE series_id = ? AND season = ? ORDER BY episode_number";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -87,8 +87,8 @@ public class EpisodeDAOImpl implements EpisodeDAO {
     
     @Override
     public Episode save(Episode episode) {
-        String sql = "INSERT INTO episodes (content_id, title, description, duration, season_number, episode_number, "
-                + "thumbnail_url, video_url, release_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO episodes (series_id, title, season, episode_number, media_url) " +
+                     "VALUES (?, ?, ?, ?, ?)";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -100,7 +100,7 @@ public class EpisodeDAOImpl implements EpisodeDAO {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        episode.setEpisodeId(generatedKeys.getLong(1));
+                        episode.setEpisodeId(generatedKeys.getInt(1));
                         return episode;
                     }
                 }
@@ -114,15 +114,14 @@ public class EpisodeDAOImpl implements EpisodeDAO {
     
     @Override
     public boolean update(Episode episode) {
-        String sql = "UPDATE episodes SET content_id = ?, title = ?, description = ?, duration = ?, "
-                + "season_number = ?, episode_number = ?, thumbnail_url = ?, video_url = ?, release_date = ? "
-                + "WHERE episode_id = ?";
+        String sql = "UPDATE episodes SET series_id = ?, title = ?, season = ?, " +
+                     "episode_number = ?, media_url = ? WHERE episode_id = ?";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             setEpisodeParameters(stmt, episode);
-            stmt.setLong(10, episode.getEpisodeId());
+            stmt.setInt(6, episode.getEpisodeId());
             
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -151,7 +150,7 @@ public class EpisodeDAOImpl implements EpisodeDAO {
     
     @Override
     public int getEpisodeCount(long contentId) {
-        String sql = "SELECT COUNT(*) FROM episodes WHERE content_id = ?";
+        String sql = "SELECT COUNT(*) FROM episodes WHERE series_id = ?";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -174,8 +173,8 @@ public class EpisodeDAOImpl implements EpisodeDAO {
     public Episode getNextEpisodeToWatch(long contentId, long profileId) {
         String sql = "SELECT e.* FROM episodes e "
                 + "LEFT JOIN viewing_history vh ON e.episode_id = vh.episode_id AND vh.profile_id = ? "
-                + "WHERE e.content_id = ? AND vh.episode_id IS NULL "
-                + "ORDER BY e.season_number, e.episode_number LIMIT 1";
+                + "WHERE e.series_id = ? AND vh.episode_id IS NULL "
+                + "ORDER BY e.season, e.episode_number LIMIT 1";
         
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -197,28 +196,20 @@ public class EpisodeDAOImpl implements EpisodeDAO {
     
     private Episode mapResultSetToEpisode(ResultSet rs) throws SQLException {
         Episode episode = new Episode();
-        episode.setEpisodeId(rs.getLong("episode_id"));
-        episode.setContentId(rs.getLong("content_id"));
+        episode.setEpisodeId(rs.getInt("episode_id"));
+        episode.setSeriesId(rs.getInt("series_id"));
         episode.setTitle(rs.getString("title"));
-        episode.setDescription(rs.getString("description"));
-        episode.setDuration(rs.getInt("duration"));
-        episode.setSeasonNumber(rs.getInt("season_number"));
+        episode.setSeason(rs.getInt("season"));
         episode.setEpisodeNumber(rs.getInt("episode_number"));
-        episode.setThumbnailUrl(rs.getString("thumbnail_url"));
-        episode.setVideoUrl(rs.getString("video_url"));
-        episode.setReleaseDate(rs.getDate("release_date"));
+        episode.setMediaUrl(rs.getString("media_url"));
         return episode;
     }
     
     private void setEpisodeParameters(PreparedStatement stmt, Episode episode) throws SQLException {
-        stmt.setLong(1, episode.getContentId());
+        stmt.setInt(1, episode.getSeriesId());
         stmt.setString(2, episode.getTitle());
-        stmt.setString(3, episode.getDescription());
-        stmt.setInt(4, episode.getDuration());
-        stmt.setInt(5, episode.getSeasonNumber());
-        stmt.setInt(6, episode.getEpisodeNumber());
-        stmt.setString(7, episode.getThumbnailUrl());
-        stmt.setString(8, episode.getVideoUrl());
-        stmt.setDate(9, new java.sql.Date(episode.getReleaseDate().getTime()));
+        stmt.setInt(3, episode.getSeason());
+        stmt.setInt(4, episode.getEpisodeNumber());
+        stmt.setString(5, episode.getMediaUrl());
     }
 }

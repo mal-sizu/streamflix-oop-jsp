@@ -7,20 +7,24 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Utility class for managing database connections
+ * Utility class for database operations with connection pooling.
+ * Supports both JNDI (production) and BasicDataSource (development fallback).
  */
 public class DatabaseUtil {
+    private static final Logger LOGGER = Logger.getLogger(DatabaseUtil.class.getName());
     private static DataSource dataSource;
     
-    // SQL Server Database Configuration
-    private static final String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
-    private static final String DB_URL = "jdbc:sqlserver://localhost:1433;databaseName=StreamFlixDB;encrypt=true;trustServerCertificate=true";
-    private static final String DB_USERNAME = "sa";
-    private static final String DB_PASSWORD = "YourStrongPassword";
-    
-    // Connection Pool Configuration
+    // Development configuration (fallback)
+    private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/streamflix";
+    private static final String DB_USERNAME = "cinephile";
+    private static final String DB_PASSWORD = "streamflix2025!";  
+      
+    // Connection pool settings
     private static final int INITIAL_SIZE = 5;
     private static final int MAX_TOTAL = 20;
     private static final int MAX_IDLE = 10;
@@ -28,36 +32,29 @@ public class DatabaseUtil {
     private static final long MAX_WAIT_MILLIS = 10000;
     
     static {
+        initializeDataSource();
+    }
+
+    private static void initializeDataSource() {
         try {
-            // Try to get DataSource from JNDI first (for production)
-            try {
-                Context initContext = new InitialContext();
-                Context envContext = (Context) initContext.lookup("java:comp/env");
-                dataSource = (DataSource) envContext.lookup("jdbc/streamflix");
-                System.out.println("Using JNDI DataSource");
-            } catch (NamingException e) {
-                // If JNDI lookup fails, create a connection pool manually (for development)
-                System.out.println("JNDI lookup failed. Setting up BasicDataSource: " + e.getMessage());
-                setupDataSource();
-            }
-        } catch (Exception e) {
-            System.err.println("Error initializing database connection: " + e.getMessage());
-            e.printStackTrace();
-            throw new ExceptionInInitializerError(e);
+            Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            dataSource = (DataSource) envContext.lookup("jdbc/StreamFlixDB");
+            LOGGER.info("Successfully initialized JNDI DataSource");
+        } catch (NamingException e) {
+            LOGGER.log(Level.SEVERE, "JNDI lookup failed. Initializing BasicDataSource", e);
+            setupDevelopmentDataSource();
         }
     }
-    
-    /**
-     * Set up a basic connection pool if JNDI is not configured
-     */
-    private static void setupDataSource() {
+
+    private static void setupDevelopmentDataSource() {
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName(DB_DRIVER);
         ds.setUrl(DB_URL);
         ds.setUsername(DB_USERNAME);
         ds.setPassword(DB_PASSWORD);
         
-        // Connection pool settings
+        // Pool configuration
         ds.setInitialSize(INITIAL_SIZE);
         ds.setMaxTotal(MAX_TOTAL);
         ds.setMaxIdle(MAX_IDLE);
@@ -70,34 +67,54 @@ public class DatabaseUtil {
         ds.setTestWhileIdle(true);
         
         dataSource = ds;
-        System.out.println("BasicDataSource set up successfully");
+        LOGGER.info("BasicDataSource configured successfully");
     }
     
-    /**
-     * Get a connection from the pool
-     * 
-     * @return a database connection
-     * @throws SQLException if a connection cannot be obtained
-     */
     public static Connection getConnection() throws SQLException {
         if (dataSource == null) {
-            throw new SQLException("DataSource is not initialized");
+            throw new SQLException("DataSource not initialized");
         }
-        return dataSource.getConnection();
+        Connection conn = dataSource.getConnection();
+        if (conn == null) {
+            throw new SQLException("Failed to obtain connection from pool");
+        }
+        return conn;
     }
     
-    /**
-     * Close connection and return it to the pool
-     * 
-     * @param conn the connection to close
-     */
-    public static void closeConnection(Connection conn) {
-        if (conn != null) {
+    public static void closeConnection(Connection connection) {
+        if (connection != null) {
             try {
-                conn.close();
+                connection.close();
             } catch (SQLException e) {
-                System.err.println("Error closing database connection: " + e.getMessage());
+                LOGGER.log(Level.WARNING, "Error closing connection", e);
             }
         }
     }
+    
+    public static boolean testConnection() {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            return conn != null && !conn.isClosed();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Connection test failed", e);
+            return false;
+        } finally {
+            closeConnection(conn);
+        }
+    }
+
+    /**
+     * Returns the configured DataSource instance.
+     * This can be useful for operations that need direct access to the DataSource.
+     * 
+     * @return The configured DataSource instance
+     */
+    public static DataSource getDataSource() {
+        if (dataSource == null) {
+            initializeDataSource();
+        }
+        return dataSource;
+    }
+
 }
